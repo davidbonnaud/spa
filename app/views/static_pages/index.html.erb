@@ -22,7 +22,9 @@
       let htmlString = "";
 
       $.each(data, (index, task) => {
-        let liElement = '<li><div class="view"><input class="toggle" type="checkbox"><label>' +
+        let taskStatus = task.done ? "checked" : "";
+        let liElement = '<li><div class="view"><input class="toggle" type="checkbox"' +
+          taskStatus + '><label>' +
           task.title +
           '</label></div></li>';
         htmlString += liElement;
