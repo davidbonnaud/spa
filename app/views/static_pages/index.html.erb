@@ -1,6 +1,9 @@
 <section class="todoapp">
   <header class="header">
     <h1>todos</h1>
+    <form id="new-form">
+      <input type="text" class="new-todo" />
+    </form>
   </header>
 
   <section class="main">
@@ -18,6 +21,11 @@
 
 <script>
   $(() => {
+    $('#new-form').submit((event) => {
+      event.preventDefault();
+      const textbox = $('.new-todo');
+      console.log("Task: ", textbox.val());
+    })
     let taskHtml = (task) => {
       let taskStatus = task.done ? "checked" : "";
         let liElement = '<li><div class="view"><input class="toggle" type="checkbox"' +
