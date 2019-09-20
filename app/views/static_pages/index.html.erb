@@ -21,11 +21,7 @@
 
 <script>
   $(() => {
-    $('#new-form').submit((event) => {
-      event.preventDefault();
-      const textbox = $('.new-todo');
-      console.log("Task: ", textbox.val());
-    })
+    
     let taskHtml = (task) => {
       let taskStatus = task.done ? "checked" : "";
         let liElement = '<li><div class="view"><input class="toggle" type="checkbox"' +
@@ -61,5 +57,21 @@
 
       $('.toggle').change(toggleTask)
     });
+
+    $('#new-form').submit((event) => {
+      event.preventDefault();
+      const textbox = $('.new-todo');
+      const payload = {
+        task: {
+          title: textbox.val()
+        }
+      }
+      $.post("/tasks", payload).success((data) => {
+        let htmlString = taskHtml(data);
+        let ulTodos = $('.todo-list');
+        ulTodos.append(htmlString);
+        $('.toggle').change(toggleTask);
+      })
+    })
   });
 </script>
