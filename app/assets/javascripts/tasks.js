@@ -1,54 +1,63 @@
-$(() => {
-  
-  let taskHtml = (task) => {
-    let taskStatus = task.done ? "checked" : "";
-      let liElement = '<li><div class="view"><input class="toggle" type="checkbox"' +
-        " data-id='" + task.id + "'" +
-        taskStatus + '><label>' +
-        task.title +
-        '</label></div></li>';
+$(function() {
+  // The taskHtml method takes in a JavaScript representation
+  // of the task and produces an HTML representation using
+  // <li> tags
+  function taskHtml(task) {
+    var checkedStatus = task.done ? "checked" : "";
+    var liElement = '<li><div class="view"><input class="toggle" type="checkbox"' +
+      " data-id='" + task.id + "'" +
+      checkedStatus +
+      '><label>' +
+       task.title +
+       '</label></div></li>';
+
     return liElement;
   }
 
-  let toggleTask = (e) => {
-    let itemId = $(e.target).data("id");
+  // toggleTask takes in an HTML representation of the
+  // an event that fires from an HTML representation of
+  // the toggle checkbox and  performs an API request to toggle
+  // the value of the `done` field
+  function toggleTask(e) {
+    var itemId = $(e.target).data("id");
 
-    let doneValue = Boolean($(e.target).is(':checked'));
+    var doneValue = Boolean($(e.target).is(':checked'));
 
     $.post("/tasks/" + itemId, {
       _method: "PUT",
       task: {
         done: doneValue
       }
-    })
+    });
   }
 
-  $.get("/tasks").success((data) => {
-    let htmlString = "";
+  $.get("/tasks").success( function( data ) {
+    var htmlString = "";
 
-    $.each(data, (index, task) => {
-      
+    $.each(data, function(index,  task) {
       htmlString += taskHtml(task);
     });
-    let ulTodos = $('.todo-list');
+    var ulTodos = $('.todo-list');
     ulTodos.html(htmlString);
 
-    $('.toggle').change(toggleTask)
+    $('.toggle').change(toggleTask);
+
   });
 
-  $('#new-form').submit((event) => {
+
+  $('#new-form').submit(function(event) {
     event.preventDefault();
-    const textbox = $('.new-todo');
-    const payload = {
+    var textbox = $('.new-todo');
+    var payload = {
       task: {
         title: textbox.val()
       }
-    }
-    $.post("/tasks", payload).success((data) => {
-      let htmlString = taskHtml(data);
-      let ulTodos = $('.todo-list');
+    };
+    $.post("/tasks", payload).success(function(data) {
+      var htmlString = taskHtml(data);
+      var ulTodos = $('.todo-list');
       ulTodos.append(htmlString);
-      $('.toggle').change(toggleTask);
-    })
-  })
+      $('.toggle').click(toggleTask);
+    });
+  });
 });
